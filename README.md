@@ -1,6 +1,13 @@
 # Полезные сниппеты
 Полезные сниппеты для PHP, CSS, Wordpress, Javascript...  
 
+## Table of Contents
+1. [PHP](#php)
+2. [Javascript](#Javascript)
+3. [Wordpress](#Wordpress)
+4. [CSS](#CSS)
+4. [MySQL](#MySQL)
+
 ## PHP
 
 ### Количество запросов и время загрузки страницы
