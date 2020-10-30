@@ -91,3 +91,41 @@ add_filter( 'pre_get_posts', 'exclude_category_home' );
 ```
 <?php if ( get_the_modified_time() != get_the_time()) : echo the_modified_time('j F Y в H:i '); endif; ?>
 ```
+### Ограничиваем длину заголовка Wordpress  
+```
+<?php echo wp_trim_words( get_the_title(), 18, ' ...' ); ?>
+```
+## CSS
+### Стилизуем скроллбар на сайте через CSS
+```
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ddd; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #aaa; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #777; 
+}
+```
+## MySQL
+### Изменение названия самой таблицы MySQL
+```
+RENAME TABLE `table` TO `table_new_name`;
+```
+### Вставляем $variable или $_POST в таблицу mysql
+Когда вы используете {}, вам не нужно оборачивать значение в ‘ ‘:  
+```
+mysql_query("INSERT INTO users (column 1, column2) VALUES ('{$_POST[value1]}', '{$_POST[value2]}')");
+```
+
