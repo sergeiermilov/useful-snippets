@@ -102,6 +102,30 @@ add_filter( 'pre_get_posts', 'exclude_category_home' );
 ```
 <?php echo wp_trim_words( get_the_title(), 18, ' ...' ); ?>
 ```
+Можно это решение сделать через функцию и файл functions.php в теме WordPress:  
+```
+add_filter( 'the_title', 'uzabila_trim_words' );
+
+function uzabila_trim_words( $title )
+{
+    return wp_trim_words( $title, 10, '' );
+}
+```
+Если вы хотите обрезать слова в зависимости от определенных свойств записи, попросите WP передать вашей функции обратного вызова идентификатор записи. Ниже пример фильтрации по типу записи. Но вы также можете реализовать это для дополнительных условий – возраста записи, автора или даже мета-тегов.  
+```
+add_filter( 'the_title', 'uzabila_trim_words_by_post_type', 10, 2 );
+
+function uzabila_trim_words_by_post_type( $title, $post_id )
+{
+
+    $post_type = get_post_type( $post_id );
+
+    if ( 'product' !== $post_type )
+        return $title;
+
+    return wp_trim_words( $title, 10, '' );
+}
+```
 ### Убираем кнопку “В корзину” или “Купить” в категориях Woocommerce
 Добавляем сниппет в файл functions.php вашей темы.  
 ```
