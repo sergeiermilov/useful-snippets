@@ -61,7 +61,6 @@ if ( !defined('MY_CONSTANT') )
     }
 ```
 Более подробно об этом почитать можно на официальном сайта PHP в справке по [синтаксису констант](https://www.php.net/manual/ru/language.constants.syntax.php) и [волшебным константам](https://www.php.net/manual/ru/language.constants.predefined.php).  
-\
 ### Отображаем заголовок категории с номером страницы пагинации  
 ```
 <?php if ( is_category() && !is_paged() ) { ?>
