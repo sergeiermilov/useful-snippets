@@ -95,6 +95,97 @@ add_filter( 'pre_get_posts', 'exclude_category_home' );
 ```
 <?php echo wp_trim_words( get_the_title(), 18, ' ...' ); ?>
 ```
+### Убираем кнопку “В корзину” или “Купить” в категориях Woocommerce
+Добавляем сниппет в файл functions.php вашей темы.  
+```
+remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10 );
+```
+### Исключаем категории из поиска в WordPress
+Рассмотрим как можно исключить статьи из определенных категорий, которые не должны появляться в результатах поиска WordPress. Добавляем данный сниппет в файл functions.php и меняем XXX на ID нужной нам категории или категорий.  
+```
+function exclude_category_from_search($query) {
+	if ($query->is_search) {
+		$query->set('cat', '-24,-45,-52');
+	}
+	return $query;
+}
+add_filter('pre_get_posts','exclude_category_from_search');
+```
+### Исключаем страницы из поиска в WordPress
+Если вы придерживаетесь какого-то разделения между постами в блоге и обычными страницами, то часто нет смысла в том, чтобы последние появлялись в результатах поиска. Мы можем просто полностью исключить все страницы из результатов поиска следующим сниппетом:  
+```
+function exclude_posts_from_search($query) {
+	if ($query->is_search) {
+		$query->set('post_type', 'post');
+	}
+	return $query;
+}
+add_filter('pre_get_posts','exclude_posts_from_search');
+```
+### Выводим количество статей в категории WordPress
+$ID заменяем на ID нужной категории с кавычками, например: '38'  
+```
+<?php 
+$cat_count = get_category($ID);
+echo $cat_count->count; 
+?>
+```
+### Ограничить количество слов в отрывках (excerpt) WordPress
+```
+function custom_excerpt_length( $length ) {
+        return 20;
+    }
+add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
+```
+### Вывод стандартной пагинации WordPress
+```
+<?php the_posts_pagination(array(
+    'prev_next' => false, 
+    'screen_reader_text' => false,
+    'type' => 'list'
+)); ?>
+```
+### Отключаем в WordPress создание миниатюр файлов определенных размеров
+```
+add_filter( 'intermediate_image_sizes', 'delete_intermediate_image_sizes' );
+function delete_intermediate_image_sizes( $sizes ){
+	// размеры которые нужно удалить
+	return array_diff( $sizes, [
+		'medium_large',
+		'large'
+	] );
+}
+```
+### Проверяем наличие миниатюры у записи
+```
+<?php if ( has_post_thumbnail() ) {
+    the_post_thumbnail();
+}; ?>
+
+// пример
+
+<?php if ( has_post_thumbnail() ) { ?>
+	<p><?php echo the_post_thumbnail_url(get_the_ID(),'thumbnail'); ?></p>
+<?php } else { ?>
+	<p>No image</p>
+<?php }; ?>
+```
+### Стандартный цикл (loop) в WordPress
+```
+<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+// здесь вывод статей, тегов и т.п.
+<?php endwhile; ?>
+<?php else :
+    _e( 'Sorry, no posts matched your criteria.', 'textdomain' );
+endif; ?>
+```
+### Получение URI каталога темы
+```
+<?php echo get_template_directory_uri(); ?>
+
+// Пример
+<img src="<?php echo get_template_directory_uri(); ?>/images/logo.png" width="" height="" alt="" />
+```
 ## CSS
 ### Стилизуем скроллбар на сайте через CSS
 ```
@@ -123,9 +214,27 @@ add_filter( 'pre_get_posts', 'exclude_category_home' );
 ```
 RENAME TABLE `table` TO `table_new_name`;
 ```
-### Вставляем $variable или $_POST в таблицу mysql
+### Вставляем $variable или $\_POST в таблицу mysql  
 Когда вы используете {}, вам не нужно оборачивать значение в ‘ ‘:  
 ```
 mysql_query("INSERT INTO users (column 1, column2) VALUES ('{$_POST[value1]}', '{$_POST[value2]}')");
 ```
+### Преобразование формата даты из mysql
+Сниппет PHP, который преобразует дату в нормальный формат типа mm/dd/yy H:M (AM/PM), dd.mm.YY H:i или любой другой.  
+```
+// $datetimeFromMysql выглядит примерно так: 2014-01-31 13:05:59
+$time = strtotime($datetimeFromMysql);
+$myFormatForView = date("m/d/y g:i A", $time);
 
+// $myFormatForView будет выглядеть так: 01/31/14 1:05 PM
+$goodTime = date("d.m.Y H:i", $time);
+
+// $goodTime будет выглядеть так: 05.09.2020 09:58
+```
+### Смена домена сайта через MySQL для WordPress
+```
+UPDATE wp_options SET option_value = replace(option_value, 'http://domain.ru', 'http://newdomain.ru') WHERE option_name = 'home' OR option_name = 'siteurl';
+UPDATE wp_posts SET guid = replace(guid, 'http://domain.ru','http://newdomain.ru');
+UPDATE wp_posts SET post_content = replace(post_content, 'http://domain.ru', 'http://newdomain.ru');
+UPDATE wp_postmeta SET meta_value = replace(meta_value,'http://domain.ru','http://newdomain.ru');
+```
