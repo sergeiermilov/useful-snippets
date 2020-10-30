@@ -3,7 +3,7 @@
 
 ## PHP
 
-### количество запросов и время загрузки страницы
+### Количество запросов и время загрузки страницы
 ```
 <?php echo get_num_queries(); ?> запросов за <?php timer_stop(1); ?> секунд.
 ```
@@ -236,7 +236,7 @@ add_filter('embed_oembed_html', function($code) {
   padding-bottom: 56.25%;
 }
 ```
-### количество запросов и время загрузки страницы
+### Количество запросов и время загрузки страницы в Wordpress
 ```
 function wpse_footer_db_queries(){
     echo '<!-- '.get_num_queries().' запросов за '.timer_stop(0).' секунд. -->'.PHP_EOL;
