@@ -69,4 +69,14 @@ if ( !defined('MY_CONSTANT') )
     <h1><?php single_cat_title(); ?> - Страница <?php echo get_query_var('paged') ;?></h1>
 <?php }; ?>
 ```
-
+### Убираем категорию с главной страницы
+```
+function exclude_category_home( $query ) {
+if ( $query->is_home ) {
+$query->set( 'cat', '-5' );
+}
+return $query;
+}
+ 
+add_filter( 'pre_get_posts', 'exclude_category_home' );
+```
