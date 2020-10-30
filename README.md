@@ -1,5 +1,12 @@
 # Полезные сниппеты
 Полезные сниппеты для PHP, CSS, Wordpress, Javascript...  
+
+## PHP
+
+### количество запросов и время загрузки страницы
+```
+<?php echo get_num_queries(); ?> запросов за <?php timer_stop(1); ?> секунд.
+```
   
 ## Javascript
   
@@ -228,6 +235,13 @@ add_filter('embed_oembed_html', function($code) {
 .embed-responsive-16by9 {
   padding-bottom: 56.25%;
 }
+```
+### количество запросов и время загрузки страницы
+```
+function wpse_footer_db_queries(){
+    echo '<!-- '.get_num_queries().' запросов за '.timer_stop(0).' секунд. -->'.PHP_EOL;
+}
+add_action('wp_footer', 'wpse_footer_db_queries');
 ```
 ## CSS
 ### Стилизуем скроллбар на сайте через CSS
