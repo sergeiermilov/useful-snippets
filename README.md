@@ -69,7 +69,8 @@ if ( !defined('MY_CONSTANT') )
     <h1><?php single_cat_title(); ?> - Страница <?php echo get_query_var('paged') ;?></h1>
 <?php }; ?>
 ```
-### Убираем категорию с главной страницы
+### Убираем категорию с главной страницы  
+Данное условие позволяет показывать дату обновления статьи только в том случае, если статья действительно была обновлена.  
 ```
 function exclude_category_home( $query ) {
 if ( $query->is_home ) {
@@ -79,4 +80,14 @@ return $query;
 }
  
 add_filter( 'pre_get_posts', 'exclude_category_home' );
+```
+### Обновленная дата статьи в Wordpress
+```
+<?php if ( get_the_modified_time() != get_the_time()) { ?>
+<?php echo the_modified_time('j F Y в H:i '); ?>
+<?php }; ?>
+```
+Короткий вариант
+```
+<?php if ( get_the_modified_time() != get_the_time()) : echo the_modified_time('j F Y в H:i '); endif; ?>
 ```
