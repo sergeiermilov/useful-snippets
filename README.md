@@ -186,6 +186,49 @@ endif; ?>
 // Пример
 <img src="<?php echo get_template_directory_uri(); ?>/images/logo.png" width="" height="" alt="" />
 ```
+### Делаем видео Youtube адаптивным
+Код ниже, оборачивает ***iframe*** в ***div*** и добавляет некоторые классы. Затем CSS изменяет размер объекта до правильной пропорции 16:9. Нам нужны два файла нашей темы – **functions.php** и **style.css**. Скорее всего в вашей теме используются именно эти файлы. Для начала добавляем следующий код в ваш файл functions.php:  
+```
+add_filter('the_content', function($content) {
+	return str_replace(array("<iframe", "</iframe>"), array('<div class="iframe-container"><iframe', "</iframe></div>"), $content);
+});
+
+add_filter('embed_oembed_html', function ($html, $url, $attr, $post_id) {
+	if(strpos($html, 'youtube.com') !== false || strpos($html, 'youtu.be') !== false){
+  		return '<div class="embed-responsive embed-responsive-16by9">' . $html . '</div>';
+	} else {
+	 return $html;
+	}
+}, 10, 4);
+
+
+add_filter('embed_oembed_html', function($code) {
+  return str_replace('<iframe', '<iframe class="embed-responsive-item" ', $code);
+});
+```
+Далее, мы должны добавить в файл со стилями (скорее всего в вашем случае style.css) следующие стилевые решения:
+```
+.embed-responsive {
+  position: relative;
+  display: block;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.embed-responsive .embed-responsive-item,
+.embed-responsive iframe {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.embed-responsive-16by9 {
+  padding-bottom: 56.25%;
+}
+```
 ## CSS
 ### Стилизуем скроллбар на сайте через CSS
 ```
